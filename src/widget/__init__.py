@@ -1,7 +1,10 @@
-from src.masks import get_mask_card_number, get_mask_account
 from datetime import datetime
 
+from src.masks import get_mask_account, get_mask_card_number
+
+
 def mask_account_card(info: str) -> str:
+   """Маскирует информацию о картах и счетах"""
    parts = info.split()
    if len(parts) < 2:
        raise ValueError("Input must have both type and number.")
@@ -18,9 +21,9 @@ def mask_account_card(info: str) -> str:
        if "Visa" in type_:
            return get_mask_card_number(number)
 
+
 def get_date(date_str: str) -> str:
+   """ДД.ММ.ГГГГ"""
    dt = datetime.fromisoformat(date_str)
 
    return dt.strftime("%d.%m.%Y")
-
-print(mask_account_card('Счет 73654108430135874305'))
