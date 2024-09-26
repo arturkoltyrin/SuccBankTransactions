@@ -18,7 +18,7 @@ def sort_by_date(data: List[Dict[str, str]], reverse: bool = True) -> List[Dict[
     """Сортирует список словарей по дате.
     Args:
         data (List[Dict[str, str]]): Список словарей, содержащих данные.
-        reverse (bool): Если True, сортирует в обратном порядке. По умолчанию False.
+        reverse (bool): Если True, сортирует в обратном порядке.
     Returns:
         List[Dict[str, str]]: Новый отсортированный список словарей по дате."""
 
