@@ -1,8 +1,8 @@
-def get_mask_card_number(card_number: str) -> str:
-    """Маскирует номер карты, оставляя видимыми первые 6 и последние 4 цифры."""
+def get_mask_card_number(info: str) -> str:
+    """Маскирует номер карты или счета, оставляя видимыми первые 6 и последние 4 цифры."""
 
     # Разделение входной строки на части
-    parts = card_number.split()
+    parts = info.split()
 
     # Проверка, что входная строка содержит как минимум тип и номер
     if len(parts) < 2:
@@ -14,17 +14,17 @@ def get_mask_card_number(card_number: str) -> str:
 
     if "Счет" in type_card:
         # Если тип - счет, маскируем номер
-        return f"{type_card} **{number[-4:]}"
+        return f"**{number[-4:]}"
     else:
         # Если это карта, маскируем номер карты
         if len(number) > 10:
             vis_part = number[:6] + number[-4:]
             masked_part = "*" * (len(number) - 10)
             masked_card_number = f"{vis_part[:4]} {vis_part[4:6]}{masked_part[:2]} {masked_part[:4]} {vis_part[-4:]}"
-            return f"{type_card} {masked_card_number}"
+            return f"{masked_card_number}"
         else:
             # Обработать случай с номером карты, меньше или равным 10 символам
-            return f"{type_card} {number}"
+            return f"{number}"
 
 
 def get_mask_account(account_number: str) -> str:
