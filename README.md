@@ -10,9 +10,7 @@ SuccBankTransactions - это проект, разработанный на Pyth
 
 1. **Клонирование репозитория**
 
-'''
 git clone https://github.com/arturkoltyrin/SuccBankTransactions.git
-'''
 
 2. **Установка зависимостей**
 
@@ -45,7 +43,10 @@ poetry run python
 from src.masks import get_mask_card_number
 
 masked_card = get_mask_card_number("7000792289606361")
-print(masked_card) # Вывод: XXXX XX90 **** 6361
+
+print(masked_card) 
+
+Вывод: XXXX XX90 **** 6361
 
 **`get_mask_account(account_number: str)`**
 
@@ -57,6 +58,7 @@ print(masked_card) # Вывод: XXXX XX90 **** 6361
 from src.masks import get_mask_account
 
 masked_account = get_mask_account("73654108430135874305")
+
 print(masked_account) # Вывод: **8305
 
 ### Модуль `widget`
@@ -74,10 +76,14 @@ print(masked_account) # Вывод: **8305
 from src.widget import mask_account_card
 
 masked_info = mask_account_card("Visa Platinum 7000792289606361")
+
 print(masked_info) # Вывод: XXXX XX90 **** 6361
 
 masked_account_info = mask_account_card("Счет 73654108430135874305")
-print(masked_account_info) # Вывод: **8305
+
+print(masked_account_info) 
+
+Вывод: **8305
 
 **`get_date(date_str: str)`**
 
@@ -88,7 +94,10 @@ print(masked_account_info) # Вывод: **8305
 from src.widget import get_date
 
 formatted_date = get_date("2024-03-11T02:26:18.671407")
-print(formatted_date) # Вывод: 11.03.2024
+
+print(formatted_date)
+
+Вывод: 11.03.2024
 
 ### Модуль `processing`
 
@@ -105,7 +114,9 @@ print(formatted_date) # Вывод: 11.03.2024
 from src.processing import filter_by_state
 
 transactions = [{'state': 'EXECUTED', 'amount': 100}]
+
 executed_transactions = filter_by_state(transactions)
+
 print(executed_transactions) # Вывод: [{'state': 'EXECUTED', 'amount': 100}]
 
 **`sort_by_date(transactions: List[Dict], order: str = 'desc')`**
@@ -117,8 +128,78 @@ print(executed_transactions) # Вывод: [{'state': 'EXECUTED', 'amount': 100}
 from src.processing import sort_by_date
 
 transactions = [{'date': '2024-03-11', 'amount': 100}]
+
 sorted_transactions = sort_by_date(transactions, order='asc')
-print(sorted_transactions) # Вывод: [{'date': '2024-03-10', 'amount': 50}]
+
+print(sorted_transactions)
+
+Вывод: [{'date': '2024-03-10', 'amount': 50}]
+
+## Тестирование модуля
+
+В проекте реализованы тесты для проверок функций, 
+связанных с обработкой и форматированием данных. 
+Все тесты написаны с использованием библиотеки `pytest`.
+
+### Тестируемые функции
+
+### 1. `get_date`
+Функция `get_date` преобразует дату из строкового формата 
+в более удобный вид (формат `DD.MM.YYYY`).
+
+#### Тесты:
+- Входные данные: `"2024-03-11T02:26:18.671407"` → Ожидаемый результат: `"11.03.2024"`
+- Входные данные: `"2023-01-01T02:26:18.671407"` → Ожидаемый результат: `"01.01.2023"`
+- Некорректный ввод (пустая строка) вызывает исключение `ValueError` 
+с сообщением "Данные отсутствуют".
+
+### 2. `mask_account_card`
+Функция `mask_account_card` маскирует номера банковских карт и счетов, 
+оставляя только последние 4 цифры.
+
+#### Тесты:
+- Входные данные: `"Maestro 1596837868705199"` → Ожидаемый результат: `"Maestro 1596 83** **** 5199"`
+- Входные данные: `"Счет 64686473678894779589"` → Ожидаемый результат: `"Счет **9589"`
+- Входные данные: `"MasterCard 7158300734726758"` → Ожидаемый результат: `"MasterCard 7158 30** **** 6758"`
+- Также тестируются другие типы карт и счетов с аналогичными ожиданиями.
+
+### 3. `get_mask_card_number`
+Функция `get_mask_card_number` возвращает замаскированный номер карты, 
+оставляя только последние 4 цифры.
+
+#### Тесты:
+- Входные данные: `"Maestro 1596837868705199"` → Ожидаемый результат: `"1596 83** **** 5199"`
+- Входные данные: `"Счет 64686473678894779589"` → Ожидаемый результат: `"**9589"`
+- При неверном вводе (например, отсутствие названия или номера) 
+вызывается `ValueError`.
+
+### 4. `get_mask_account`
+Функция `get_mask_account` маскирует номера счетов, оставляя только последние 4 цифры.
+
+#### Тесты:
+- Входные данные: `"73654108430135874305"` → Ожидаемый результат: `"**4305"`
+- Входные данные: `"84930254671289437564"` → Ожидаемый результат: `"**7564"`
+- Тестируются и другие номера счетов.
+
+### 5. `filter_by_state`
+Функция `filter_by_state` фильтрует список словарей по заданному состоянию (`state`).
+
+#### Тесты:
+- Входные данные: список с состояниями `["EXECUTED", "CANCELED"]`
+→ Ожидаемый результат: `[{ "state": "EXECUTED", "amount": 100 }, { "state": "EXECUTED", "amount": 300 }]`
+- При фильтрации по несуществующему состоянию возвращается пустой список.
+
+### 6. `sort_by_date`
+Функция `sort_by_date` сортирует список словарей по дате.
+
+#### Тесты:
+- Входные данные с датами в различном порядке → Сортировка по возрастанию и убыванию дате.
+- Проверяется, что данные правильно сортируются в соответствии с заданным параметром `reverse`.
+
+### Запуск тестов
+
+Для выполнения тестов необходимо иметь установленный `pytest`. 
+Можно запустить тесты с помощью команды  `pytest`.
 
 ## Проверка качества кода
 
