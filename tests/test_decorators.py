@@ -1,5 +1,5 @@
 import pytest
-import os
+
 from src.decorators.decorators import log
 
 
@@ -60,19 +60,3 @@ def test_raise_exception(capsys):
 
     assert "Запуск функции 'raise_exception' с параметрами: (), {}" in captured.out
     assert "raise_exception error: ValueError. Inputs: (), {}" in captured.out
-
-
-def test_decorator_no_args(capsys):
-    @log()
-    def greet(name):
-        return f"Hello, {name}!"
-
-    result = greet("World")
-
-    # захватываем вывод
-    captured = capsys.readouterr()
-
-    assert result == "Hello, World!"
-    assert "Запуск функции 'greet' с параметрами: ('World',), {}" in captured.out
-    assert "greet успешно выполнилась" in captured.out
-

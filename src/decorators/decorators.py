@@ -19,7 +19,7 @@ def log(filename: Optional[str] = None) -> Callable:
             if log_output:
                 log_output.write(f"Запуск функции '{function.__name__}' с параметрами: {args}, {kwargs}")
             else:
-                print(f"Ошибки при запуске функции '{function.__name__}' с параметрами: {args}, {kwargs}")
+                print(f"Запуск функции '{function.__name__}' с параметрами: {args}, {kwargs}")
 
             try:
                 # Вызываем функцию
@@ -30,17 +30,19 @@ def log(filename: Optional[str] = None) -> Callable:
                     log_message = f"{function.__name__} успешно выполнилась"
                     log_output.write(log_message)
                 else:
-                    log_message = f"Ошибки при запуске функции {function.__name__}"
+                    log_message = f"{function.__name__} успешно выполнилась"
                     print(log_message)
                 return result
 
             except Exception as e:
                 # Логируем ошибку
-                error_message = f"{function.__name__} error: {type(e).__name__}. Inputs: {args}, {kwargs}\n"
+                error_message = f"{function.__name__} error: {type(e).__name__}. Inputs: {args}, {kwargs}"
                 if log_output:
                     log_output.write(error_message)
                 else:
                     print(error_message)
+
+                raise
 
             finally:
                 # Закрываем файл
