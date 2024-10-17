@@ -8,7 +8,7 @@ def load_transactions(filepath: str) -> List[Dict[str, Any]]:
     if not os.path.exists(filepath) or not os.path.isfile(filepath):
         return []
 
-    with open(filepath, 'r', encoding='utf-8') as file:
+    with open(filepath, "r", encoding="utf-8") as file:
         try:
             data = json.load(file)
             if isinstance(data, list):
