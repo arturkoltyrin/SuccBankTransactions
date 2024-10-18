@@ -7,15 +7,15 @@ load_dotenv(".env")
 
 
 def test_convert_to_rub_currency_rub():
-    """Тестирует конвертацию, если валюта уже в рублях."""
-    transaction = {"Amount": 150.0, "Currency": "RUB"}
+    """Тестирует конвертацию, если валюта в рублях."""
+    transaction = {"operationAmount": {"amount": 150.0, "currency": {"code": "RUB"}}}
     result = convert_to_rub(transaction)
     assert result == 150.0, f"Expected 150.0 but got {result}"
 
 
 def test_convert_to_rub_successful_conversion():
     """Тестирует успешную конвертацию из USD в RUB."""
-    transaction = {"Amount": 150.0, "Currency": "USD"}
+    transaction = {"operationAmount": {"amount": 150.0, "currency": {"code": "USD"}}}
     with patch("requests.get") as mock_get, patch("os.getenv", return_value="fake_api_key"):
         mock_response = MagicMock()
         mock_response.status_code = 200
@@ -28,7 +28,7 @@ def test_convert_to_rub_successful_conversion():
 
 def test_convert_to_rub_failed_conversion():
     """Тестирует обработку ошибки при запросе на API."""
-    transaction = {"Amount": 150.0, "Currency": "EUR"}
+    transaction = {"operationAmount": {"amount": 150.0, "currency": {"code": "EUR"}}}
     with patch("requests.get") as mock_get, patch("os.getenv", return_value="fake_api_key"):
         mock_response = MagicMock()
         mock_response.status_code = 400
@@ -40,7 +40,7 @@ def test_convert_to_rub_failed_conversion():
 
 def test_convert_to_rub_invalid_response():
     """Тестирует случай, когда API возвращает некорректный ответ."""
-    transaction = {"Amount": 150.0, "Currency": "JPY"}
+    transaction = {"operationAmount": {"amount": 150.0, "currency": {"code": "JPY"}}}
     with patch("requests.get") as mock_get, patch("os.getenv", return_value="fake_api_key"):
         mock_response = MagicMock()
         mock_response.status_code = 200

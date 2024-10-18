@@ -241,7 +241,7 @@ return a * b
 
 **Пример использования:**
 
-transaction = {"Amount": 100, "Currency": "USD"}
+transaction = {"operationAmount": {"amount": 100, "currency": {"code": "USD"}}}
 rub_amount = convert_to_rub(transaction)
 print(rub_amount)
 

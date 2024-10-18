@@ -2,15 +2,16 @@ import os
 import requests
 from dotenv import load_dotenv
 
+
 # Загрузка переменных окружения из файла .env
 load_dotenv(".env")
 
 API_KEY = os.getenv("API_KEY")  # Получение токена API
 
-
 def convert_to_rub(transaction: dict) -> float:
-    amount = transaction.get("Amount", 0.0)  # Получение суммы транзакции
-    currency = transaction.get("Currency", "")  # Получение валюты транзакции
+    # Извлечение суммы и валюты по новым ключам
+    amount = transaction.get("operationAmount", {}).get("amount", 0.0)
+    currency = transaction.get("operationAmount", {}).get("currency", {}).get("code", "")
 
     if currency == "RUB":
         return float(amount)  # Если валюта в рублях, возвращаем сумму
@@ -26,4 +27,4 @@ def convert_to_rub(transaction: dict) -> float:
     if response.status_code == 200:
         return response.json().get("result", 0.0)  # Возвращаем результат конвертации
 
-    return 0.0  # Если произошла ошибка, возвращаем 0.0
+    return 0.0
