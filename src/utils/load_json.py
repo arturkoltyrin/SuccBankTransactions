@@ -1,14 +1,13 @@
 import json
-import os
 import logging
-from typing import List, Dict, Any
-
+import os
+from typing import Any, Dict, List
 
 logger = logging.getLogger("utils.load_json")
 logger.setLevel(logging.DEBUG)
 
 file_handler = logging.FileHandler("C:/Users/user/PycharmProjects/SuccBankTransactions/logs/load_json.log")
-file_formatter = logging.Formatter('%(asctime)s - %(module)s - %(levelname)s - %(message)s')
+file_formatter = logging.Formatter("%(asctime)s - %(module)s - %(levelname)s - %(message)s")
 file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
 
