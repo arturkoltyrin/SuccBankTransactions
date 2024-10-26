@@ -22,7 +22,7 @@ def get_mask_card_number(info: str) -> str:
     number = parts[-1]
 
     if "Счет" in type_card:
-        masked = f"<strong>{number[-4:]}"
+        masked = f"**{number[-4:]}"
         logger.info(f"Маскирование номера счета: {masked}")
         return masked
     else:
@@ -34,11 +34,18 @@ def get_mask_card_number(info: str) -> str:
             return masked_card_number
         else:
             logger.info(f"Короткий номер карты, возвращается без маски: {number}")
+
             return number
+
 
 def get_mask_account(account_number: str) -> str:
     """Маскирует номер счета, оставляя видимыми последние 4 цифры."""
-    masked = f"</strong>{account_number[-4:]}"
+    if len(account_number) < 4:
+        raise ValueError("Номер счета должен состоять как минимум из 4 цифр.")
+
+    masked = account_number[-4:]
     logger.info(f"Маскирование номера счета: {masked}")
 
-    return masked
+    return f"**{masked}"
+
+print(get_mask_account("73654108430135874305"))

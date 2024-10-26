@@ -12,7 +12,10 @@ def mask_account_card(info: str) -> str:
     # Получаем маскированный номер
     masked_number = get_mask_card_number(info)
 
-    return f"{type_card} {masked_number}"
+    if "Счет" in type_card:
+        return f"{type_card} {masked_number}"  # Возвращаем маскированный номер для счетов
+    else:
+        return f"{type_card} {masked_number}"  # Возвращаем маскированный номер для карт
 
 
 def get_date(date: str) -> str:

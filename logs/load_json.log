@@ -1,0 +1,38 @@
+2024-10-23 19:57:46,593 - load_json - DEBUG - Попытка загрузить файл: fake_path.json
+2024-10-23 19:57:46,595 - load_json - ERROR - Файл не найден или не является файлом: fake_path.json
+2024-10-23 19:57:46,598 - load_json - DEBUG - Попытка загрузить файл: fake_path.json
+2024-10-23 19:57:46,599 - load_json - ERROR - Файл не найден или не является файлом: fake_path.json
+2024-10-23 19:57:46,608 - load_json - DEBUG - Попытка загрузить файл: fake_path.json
+2024-10-23 19:57:46,609 - load_json - ERROR - Ошибка декодирования JSON: Expecting value: line 1 column 1 (char 0)
+2024-10-23 19:57:46,618 - load_json - DEBUG - Попытка загрузить файл: fake_path.json
+2024-10-23 19:57:46,620 - load_json - INFO - Файл успешно загружен.
+2024-10-23 19:57:46,630 - load_json - DEBUG - Попытка загрузить файл: fake_path.json
+2024-10-23 19:57:46,631 - load_json - ERROR - Ошибка декодирования JSON: Expecting value: line 1 column 1 (char 0)
+2024-10-23 20:00:03,673 - load_json - DEBUG - Попытка загрузить файл: fake_path.json
+2024-10-23 20:00:03,674 - load_json - ERROR - Файл не найден или не является файлом: fake_path.json
+2024-10-23 20:00:06,825 - load_json - DEBUG - Попытка загрузить файл: fake_path.json
+2024-10-23 20:00:06,826 - load_json - ERROR - Файл не найден или не является файлом: fake_path.json
+2024-10-23 20:00:10,333 - load_json - DEBUG - Попытка загрузить файл: fake_path.json
+2024-10-23 20:00:10,334 - load_json - ERROR - Ошибка декодирования JSON: Expecting value: line 1 column 1 (char 0)
+2024-10-23 20:00:14,376 - load_json - DEBUG - Попытка загрузить файл: fake_path.json
+2024-10-23 20:00:14,376 - load_json - ERROR - Ошибка декодирования JSON: Expecting value: line 1 column 1 (char 0)
+2024-10-23 20:22:15,079 - load_json - DEBUG - Попытка загрузить файл: fake_path.json
+2024-10-23 20:22:15,080 - load_json - ERROR - Файл не найден или не является файлом: fake_path.json
+2024-10-23 20:22:15,084 - load_json - DEBUG - Попытка загрузить файл: fake_path.json
+2024-10-23 20:22:15,084 - load_json - ERROR - Файл не найден или не является файлом: fake_path.json
+2024-10-23 20:22:15,093 - load_json - DEBUG - Попытка загрузить файл: fake_path.json
+2024-10-23 20:22:15,094 - load_json - ERROR - Ошибка декодирования JSON: Expecting value: line 1 column 1 (char 0)
+2024-10-23 20:22:15,104 - load_json - DEBUG - Попытка загрузить файл: fake_path.json
+2024-10-23 20:22:15,105 - load_json - INFO - Файл успешно загружен.
+2024-10-23 20:22:15,114 - load_json - DEBUG - Попытка загрузить файл: fake_path.json
+2024-10-23 20:22:15,115 - load_json - ERROR - Ошибка декодирования JSON: Expecting value: line 1 column 1 (char 0)
+2024-10-23 20:30:28,455 - load_json - DEBUG - Попытка загрузить файл: fake_path.json
+2024-10-23 20:30:28,456 - load_json - ERROR - Файл не найден или не является файлом: fake_path.json
+2024-10-23 20:30:28,460 - load_json - DEBUG - Попытка загрузить файл: fake_path.json
+2024-10-23 20:30:28,460 - load_json - ERROR - Файл не найден или не является файлом: fake_path.json
+2024-10-23 20:30:28,470 - load_json - DEBUG - Попытка загрузить файл: fake_path.json
+2024-10-23 20:30:28,471 - load_json - ERROR - Ошибка декодирования JSON: Expecting value: line 1 column 1 (char 0)
+2024-10-23 20:30:28,480 - load_json - DEBUG - Попытка загрузить файл: fake_path.json
+2024-10-23 20:30:28,481 - load_json - INFO - Файл успешно загружен.
+2024-10-23 20:30:28,491 - load_json - DEBUG - Попытка загрузить файл: fake_path.json
+2024-10-23 20:30:28,492 - load_json - ERROR - Ошибка декодирования JSON: Expecting value: line 1 column 1 (char 0)
