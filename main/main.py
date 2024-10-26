@@ -44,7 +44,7 @@ def main() -> None:
     choice = input("Пользователь: ")
 
     if choice == "1":
-        transactions = load_transactions_from_json("transactions.json")  # Замените на ваш файл
+        transactions = load_transactions_from_json("operations.json")
         print("Для обработки выбран JSON-файл.")
 
         valid_statuses = {"executed", "canceled", "pending"}
@@ -52,8 +52,8 @@ def main() -> None:
         while True:
             status = input(
                 "Введите статус, по которому необходимо выполнить фильтрацию.\n"
-                "Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING\nПользователь: "
-            ).lower()
+                "Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING\n"
+                "Пользователь: ").lower()
             if status in valid_statuses:
                 print(f'Операции отфильтрованы по статусу "{status.upper()}"')
                 break
@@ -64,23 +64,26 @@ def main() -> None:
         filtered_transactions = [trans for trans in transactions if trans["status"].lower() == status]
 
         # Сортировка
-        sort_choice = input("Отсортировать операции по дате? Да/Нет\nПользователь: ").lower()
+        sort_choice = input("Отсортировать операции по дате? Да/Нет\n"
+                            "Пользователь: ").lower()
         if sort_choice == "да":
-            order = input("Отсортировать по возрастанию или по убыванию?\nПользователь: ").lower()
+            order = input("Отсортировать по возрастанию или по убыванию?\n"
+                          "Пользователь: ").lower()
             if order == "по возрастанию":
                 filtered_transactions.sort(key=lambda x: x["date"])
             elif order == "по убыванию":
                 filtered_transactions.sort(key=lambda x: x["date"], reverse=True)
 
         # Фильтрация по валюте
-        currency_choice = input("Выводить только рублевые транзакции? Да/Нет\nПользователь: ").lower() == "да"
+        currency_choice = input("Выводить только рублевые транзакции? Да/Нет\n"
+                                "Пользователь: ").lower() == "да"
         if currency_choice:
             filtered_transactions = [trans for trans in filtered_transactions if trans["currency"] == "RUB"]
 
         # Фильтрация по описанию
         description_filter = input(
-            "Отфильтровать список транзакций по определенному слову в описании? Да/Нет\nПользователь: "
-        ).lower()
+            "Отфильтровать список транзакций по определенному слову в описании? Да/Нет\n"
+            "Пользователь: ").lower()
         if description_filter == "да":
             search_string = input("Введите строку для поиска в описании: ")
             filtered_transactions = filter_transactions_by_description(filtered_transactions, search_string)
@@ -89,9 +92,10 @@ def main() -> None:
         if filtered_transactions:
             print("Распечатываю итоговый список транзакций...")
             for trans in filtered_transactions:
-                print(
-                    f"\n{trans['date']} {trans['description']}\nСчет {trans['account']}\nСумма: {trans['amount']} {trans['currency']}\n"
-                )
+                print(f"\n{trans['date']} {trans['description']}\n"
+                      f"Счет {trans['account']}\n"
+                      f"Сумма: {trans['amount']} {trans['currency']}\n")
+
             print(f"Всего банковских операций в выборке: {len(filtered_transactions)}")
         else:
             print("Не найдено ни одной транзакции, подходящей под ваши условия фильтрации")

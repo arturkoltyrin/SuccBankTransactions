@@ -282,7 +282,7 @@ print(transactions)
 transactions = load_transactions("transactions.csv")
 print(transactions)
 
-**`oad_transactions_from_excel(filepath: str) -> List[Dict[str, str]]`**
+**`load_transactions_from_excel(filepath: str) -> List[Dict[str, str]]`**
 
 Функция загружает финансовые транзакции из excel-файла.
 
@@ -296,6 +296,22 @@ print(transactions)
 
 transactions = load_transactions("transactions.xls")
 print(transactions)
+
+### Модуль `'main'`
+Функции написаны с использованием регулярных выражений и библиотеки `re`.
+#### Функции:
+
+**`filter_transactions_by_description`**
+Функция позволяет фильтровать список транзакций на основе регулярных выражений, 
+обеспечивая возможность более точного поиска по описанию транзакции.
+
+**`count_transactions_by_category`**
+Функция предоставляет возможность подсчитывать количество операций в каждой категории, 
+делая анализ данных более простым и быстрым.
+
+**`load_transactions_from_json`**
+Функция загружает данные транзакций из файлов в формате JSON, 
+позволяя удобно работать с хранимыми данными.
 
 ## Тестирование модулей
 
