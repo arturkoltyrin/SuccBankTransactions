@@ -1,105 +1,112 @@
-import json
 import re
-from collections import defaultdict
-from typing import Dict, List, Union
+import pandas as pd
+from collections import Counter
+from typing import List, Dict, Union
+from src.decorators.decorators import log
+from src.external_api.external_api import convert_to_rub
+from src.generators.generators import filter_by_currency
+from src.processing.processing import filter_by_state, sort_by_date
+from src.reading_financial_transactions_from_CSV_XLSX_files.read_financ_transactions import load_transactions_from_csv, \
+    load_transactions_from_excel
+from src.utils.load_json import load_transactions
+from src.masks import get_mask_card_number, get_mask_account
 
 
+@log()
 def filter_transactions_by_description(
-    transactions: List[Dict[str, Union[str, float]]], search_string: str
+        transactions: List[Dict[str, Union[str, float]]], search_string: str
 ) -> List[Dict[str, Union[str, float]]]:
     """Фильтрует список транзакций по описанию с использованием регулярных выражений."""
-    pattern = re.compile(re.escape(search_string), re.IGNORECASE)  # Регулярное выражение для поиска
-    filtered_transactions = [trans for trans in transactions if pattern.search(trans.get("description", ""))]
-
-    return filtered_transactions
+    pattern = re.compile(re.escape(search_string), re.IGNORECASE)
+    return [trans for trans in transactions if pattern.search(trans.get('description', ''))]
 
 
-def count_transactions_by_category(transactions: List[Dict[str, str]]) -> Dict[str, int]:
+@log()
+def count_transactions_by_category(transactions: List[Dict[str, str]], categories: List[str]) -> Dict[str, int]:
     """Подсчитывает количество операций в каждой категории."""
-    count_dict = defaultdict(int)
-
+    count_dict = dict.fromkeys(categories, 0)
     for transaction in transactions:
-        category = transaction.get("description", "").lower()  # Приводим к нижнему регистру для унификации
-        count_dict[category] += 1
-
-    return dict(count_dict)
-
-
-def load_transactions_from_json(file_path: str) -> List[Dict[str, Union[str, float]]]:
-    """Загружает транзакции из JSON-файла."""
-    with open(file_path, "r", encoding="utf-8") as f:
-
-        return json.load(f)
+        category = transaction.get('description', '').lower()
+        if category in count_dict:
+            count_dict[category] += 1
+    return count_dict
 
 
+@log()
+def count_transactions_by_type(transactions: List[Dict[str, str]], transaction_type: str) -> int:
+    """Подсчитывает количество операций определенного типа."""
+    return Counter(trans['description'] for trans in transactions)[transaction_type]
+
+
+@log()
 def main() -> None:
-    """Основная функция, которая отвечает за логику работы программы.
-    Обработает пользовательский ввод и взаимодействие с банковскими транзакциями."""
+    """Основная функция, которая отвечает за логику работы программы."""
     print("Привет! Добро пожаловать в программу работы с банковскими транзакциями.")
     print("Выберите необходимый пункт меню:")
     print("1. Получить информацию о транзакциях из JSON-файла")
     print("2. Получить информацию о транзакциях из CSV-файла")
     print("3. Получить информацию о транзакциях из XLSX-файла")
 
-    choice = input("Пользователь: ")
+    choice = input("Пользователь: ").strip()
 
-    if choice == "1":
-        transactions = load_transactions_from_json("operations.json")
-        print("Для обработки выбран JSON-файл.")
+    # Загрузка данных в зависимости от выбора пользователя
+    if choice == '1':
+        file_name = input("Введите имя JSON файла: ").strip()
+        transactions = load_transactions(file_name)
+    elif choice == '2':
+        file_name = input("Введите имя CSV файла: ").strip()
+        transactions = load_transactions_from_csv(file_name)
+    elif choice == '3':
+        file_name = input("Введите имя XLSX файла: ").strip()
+        transactions = load_transactions_from_excel(file_name)
+    else:
+        print("Не поддерживаемый формат. Программа завершает работу.")
+        return
 
-        valid_statuses = {"executed", "canceled", "pending"}
+    print("Файл успешно загружен.")
 
-        while True:
-            status = input(
-                "Введите статус, по которому необходимо выполнить фильтрацию.\n"
-                "Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING\n"
-                "Пользователь: ").lower()
-            if status in valid_statuses:
-                print(f'Операции отфильтрованы по статусу "{status.upper()}"')
-                break
-            else:
-                print(f'Статус операции "{status}" недоступен.')
-
-        # Фильтрация по статусу
-        filtered_transactions = [trans for trans in transactions if trans["status"].lower() == status]
-
-        # Сортировка
-        sort_choice = input("Отсортировать операции по дате? Да/Нет\n"
-                            "Пользователь: ").lower()
-        if sort_choice == "да":
-            order = input("Отсортировать по возрастанию или по убыванию?\n"
-                          "Пользователь: ").lower()
-            if order == "по возрастанию":
-                filtered_transactions.sort(key=lambda x: x["date"])
-            elif order == "по убыванию":
-                filtered_transactions.sort(key=lambda x: x["date"], reverse=True)
-
-        # Фильтрация по валюте
-        currency_choice = input("Выводить только рублевые транзакции? Да/Нет\n"
-                                "Пользователь: ").lower() == "да"
-        if currency_choice:
-            filtered_transactions = [trans for trans in filtered_transactions if trans["currency"] == "RUB"]
-
-        # Фильтрация по описанию
-        description_filter = input(
-            "Отфильтровать список транзакций по определенному слову в описании? Да/Нет\n"
-            "Пользователь: ").lower()
-        if description_filter == "да":
-            search_string = input("Введите строку для поиска в описании: ")
-            filtered_transactions = filter_transactions_by_description(filtered_transactions, search_string)
-
-        # Вывод результата
-        if filtered_transactions:
-            print("Распечатываю итоговый список транзакций...")
-            for trans in filtered_transactions:
-                print(f"\n{trans['date']} {trans['description']}\n"
-                      f"Счет {trans['account']}\n"
-                      f"Сумма: {trans['amount']} {trans['currency']}\n")
-
-            print(f"Всего банковских операций в выборке: {len(filtered_transactions)}")
+    # Фильтрация по статусу
+    valid_statuses = {"executed", "canceled", "pending"}
+    while True:
+        status = input("Введите статус (EXECUTED, CANCELED, PENDING): ").lower()
+        if status in valid_statuses:
+            print(f'Операции отфильтрованы по статусу "{status.upper()}"')
+            filtered_transactions = filter_by_state(transactions, status)
+            break
         else:
-            print("Не найдено ни одной транзакции, подходящей под ваши условия фильтрации")
+            print(f'Статус операции "{status}" недоступен.')
+
+    # Конвертация валюты
+    convert_currency = input("Конвертировать суммы в рубли? (Да/Нет): ").strip().lower()
+    if convert_currency == 'да':
+        for trans in filtered_transactions:
+            trans['amount'] = convert_to_rub(trans)
+
+    # Фильтрация по описанию
+    description_filter = input("Отфильтровать список транзакций по слову в описании? (Да/Нет): ").strip().lower()
+    if description_filter == 'да':
+        search_string = input("Введите строку для поиска в описании: ")
+        filtered_transactions = filter_transactions_by_description(filtered_transactions, search_string)
+
+    # Сортировка по дате
+    sort_choice = input("Отсортировать операции по дате? (Да/Нет): ").strip().lower()
+    if sort_choice == 'да':
+        order = input("Отсортировать по возрастанию или по убыванию? (по возрастанию/по убыванию): ").strip().lower()
+        if order == 'по убыванию':
+            filtered_transactions = sort_by_date(filtered_transactions, reverse=True)
+
+    # Вывод итогового списка транзакций
+    if filtered_transactions:
+        print("Распечатываю итоговый список транзакций...")
+        for trans in filtered_transactions:
+            masked_card = get_mask_card_number(f"Карта {trans['from']}")
+            masked_account = get_mask_account(trans['to'])
+            print(
+                f"\n{trans['date']} {trans['description']}\nСчет {masked_card} ➜ {masked_account}\nСумма: {trans['amount']} {trans['currency_code']}")
+        print(f"Всего банковских операций в выборке: {len(filtered_transactions)}")
+    else:
+        print("Не найдено ни одной транзакции, подходящей под ваши условия фильтрации")
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

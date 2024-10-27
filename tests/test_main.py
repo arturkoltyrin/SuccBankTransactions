@@ -1,10 +1,4 @@
-import json
-from unittest.mock import mock_open, patch
-
-import pytest
-
-from main.main import count_transactions_by_category, filter_transactions_by_description, load_transactions_from_json
-
+from main.main import count_transactions_by_category, filter_transactions_by_description
 
 def test_filter_transactions_by_description():
     transactions = [
@@ -18,8 +12,7 @@ def test_filter_transactions_by_description():
     assert filtered[0]["description"] == "Открытие вклада"
 
     filtered = filter_transactions_by_description(transactions, "перевод")
-    assert len(filtered) == 2
-
+    assert len(filtered) == 2  # Должно вернуть 2 транзакции
 
 def test_count_transactions_by_category():
     transactions = [
@@ -28,20 +21,9 @@ def test_count_transactions_by_category():
         {"description": "Перевод организации"},
         {"description": "Открытие вклада"},
     ]
+    categories = ["открытие вклада", "перевод с карты на карту", "перевод организации"]
 
-    counts = count_transactions_by_category(transactions)
+    counts = count_transactions_by_category(transactions, categories)
     assert counts["открытие вклада"] == 2
     assert counts["перевод с карты на карту"] == 1
     assert counts["перевод организации"] == 1
-
-
-@patch("builtins.open", new_callable=mock_open, read_data='[{"description": "Тест", "amount": 100}]')
-def test_load_transactions_from_json(mock_file):
-    transactions = load_transactions_from_json("dummy_path.json")
-    assert len(transactions) == 1
-    assert transactions[0]["description"] == "Тест"
-    assert transactions[0]["amount"] == 100
-
-
-if __name__ == "__main__":
-    pytest.main()
