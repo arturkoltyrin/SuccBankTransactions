@@ -12,7 +12,7 @@ file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
 
 
-def load_transactions(filepath: str) -> List[Dict[str, Any]]:
+def load_transactions(filepath: str = "C:/Users/user/PycharmProjects/SuccBankTransactions/data/operations.json") -> List[Dict[str, Any]]:
     """Загружает финансовые транзакции из JSON-файла."""
     logger.debug(f"Попытка загрузить файл: {filepath}")
     if not os.path.exists(filepath) or not os.path.isfile(filepath):

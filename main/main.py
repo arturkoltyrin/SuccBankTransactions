@@ -33,9 +33,9 @@ def count_transactions_by_category(transactions: List[Dict[str, str]], categorie
 
 
 @log()
-def count_transactions_by_type(transactions: List[Dict[str, str]], transaction_type: str) -> int:
-    """Подсчитывает количество операций определенного типа."""
-    return Counter(trans['description'] for trans in transactions)[transaction_type]
+def filter_rub_transactions(transactions: List[Dict[str, Union[str, float]]]) -> List[Dict[str, Union[str, float]]]:
+    """Фильтрует транзакции, оставляя только рублевые."""
+    return [transaction for transaction in transactions if transaction.get('currency_code') == 'RUB']
 
 
 @log()
@@ -66,15 +66,20 @@ def main() -> None:
     print("Файл успешно загружен.")
 
     # Фильтрация по статусу
-    valid_statuses = {"executed", "canceled", "pending"}
+    valid_statuses = {"EXECUTED", "CANCELED", "PENDING"}
+
+    filtered_transactions = None
     while True:
-        status = input("Введите статус (EXECUTED, CANCELED, PENDING): ").lower()
+        status = input("Введите статус (EXECUTED, CANCELED, PENDING): ").upper()
         if status in valid_statuses:
-            print(f'Операции отфильтрованы по статусу "{status.upper()}"')
+            print(f'Операции отфильтрованы по статусу "{status}"')
             filtered_transactions = filter_by_state(transactions, status)
             break
         else:
             print(f'Статус операции "{status}" недоступен.')
+
+    # Фильтрация по рублевым транзакциям
+    filtered_transactions = filter_rub_transactions(filtered_transactions)
 
     # Конвертация валюты
     convert_currency = input("Конвертировать суммы в рубли? (Да/Нет): ").strip().lower()
@@ -93,7 +98,9 @@ def main() -> None:
     if sort_choice == 'да':
         order = input("Отсортировать по возрастанию или по убыванию? (по возрастанию/по убыванию): ").strip().lower()
         if order == 'по убыванию':
-            filtered_transactions = sort_by_date(filtered_transactions, reverse=True)
+            filtered_transactions = sort_by_date(filtered_transactions, reverse=True)  # Передаем reverse=True
+        else:
+            filtered_transactions = sort_by_date(filtered_transactions)  # По умолчанию reverse=False
 
     # Вывод итогового списка транзакций
     if filtered_transactions:
@@ -105,7 +112,7 @@ def main() -> None:
                 f"\n{trans['date']} {trans['description']}\nСчет {masked_card} ➜ {masked_account}\nСумма: {trans['amount']} {trans['currency_code']}")
         print(f"Всего банковских операций в выборке: {len(filtered_transactions)}")
     else:
-        print("Не найдено ни одной транзакции, подходящей под ваши условия фильтрации")
+        print("Не найдено ни одной транзакции, подходящей под ваши условия фильтрации.")
 
 
 if __name__ == '__main__':
