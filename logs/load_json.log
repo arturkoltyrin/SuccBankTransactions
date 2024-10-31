@@ -46,3 +46,7 @@
 2024-10-30 19:17:14,037 - load_json - INFO - Файл успешно загружен.
 2024-10-30 19:29:26,013 - load_json - DEBUG - Попытка загрузить файл: C:/Users/user/PycharmProjects/SuccBankTransactions/data/operations.json
 2024-10-30 19:29:26,014 - load_json - INFO - Файл успешно загружен.
+2024-10-31 19:15:51,862 - load_json - DEBUG - Попытка загрузить файл: C:/Users/user/PycharmProjects/SuccBankTransactions/data/operations.json
+2024-10-31 19:15:51,880 - load_json - INFO - Файл успешно загружен.
+2024-10-31 19:28:21,534 - load_json - DEBUG - Попытка загрузить файл: C:/Users/user/PycharmProjects/SuccBankTransactions/data/operations.json
+2024-10-31 19:28:21,536 - load_json - INFO - Файл успешно загружен.
